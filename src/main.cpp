@@ -7,6 +7,7 @@ const char* ssid = "FlutterESP32";  // Enter SSID here
 const char* password = "12345678";  //Enter Password here
 
 int doors[] = {0,2,4,5};
+bool doors_state[4];
 
 //Functions
 
@@ -30,7 +31,7 @@ IPAddress subnet(255,255,255,0);
 
 WebServer server(80);
 
-bool ledVetor[30];
+
 
 void setup() {
   Serial.begin(115200);
@@ -60,13 +61,13 @@ void setup() {
 void loop() {
   server.handleClient();
   for(int i =0; i< sizeof(doors)/sizeof(int); i++){
-    digitalWrite(i, ledVetor[i]);
+    digitalWrite(i, doors_state[i]);
   }
 }
 
 void turn_off_all(){
   for(int i =0; i < sizeof(doors)/sizeof(int); i++){
-    ledVetor[i] = LOW;
+    doors_state[i] = LOW;
   }
 }
 
@@ -80,62 +81,54 @@ void handle_NotFound(){
 }
 
 void handle_ledOn0() {
-  ledVetor[0] = HIGH;
+  doors_state[0] = HIGH;
   server.send(200, "text/html", SendHTML()); 
 }
 
 void handle_ledOff0() {
-  ledVetor[0] = LOW;
+  doors_state[0] = LOW;
   server.send(200, "text/html", SendHTML());  
 }
 
 void handle_ledOn2() {
-  ledVetor[2] = HIGH;
+  doors_state[1] = HIGH;
   server.send(200, "text/html", SendHTML()); 
 }
 
 void handle_ledOff2() {
-  ledVetor[2] = LOW;
+  doors_state[1] = LOW;
   server.send(200, "text/html", SendHTML()); 
 }
 
 void handle_ledOn4() {
-  ledVetor[4] = HIGH;
+  doors_state[2] = HIGH;
   server.send(200, "text/html", SendHTML()); 
 }
 
 void handle_ledOff4() {
-  ledVetor[4] = LOW;
+  doors_state[2] = LOW;
   server.send(200, "text/html", SendHTML()); 
 }
 
 void handle_ledOn5() {
-  ledVetor[5] = HIGH;
+  doors_state[3] = HIGH;
   server.send(200, "text/html", SendHTML()); 
 }
 
 void handle_ledOff5() {
-  ledVetor[5] = LOW;
+  doors_state[3] = LOW;
   server.send(200, "text/html", SendHTML()); 
 }
 
 String SendHTML(){
   String ptr = "";
-  ptr +="{";
+  ptr +="{\n";
 
   for(int i =0; i < sizeof(doors)/sizeof(int); i++){
     if(i != (sizeof(doors)/sizeof(int) - 1)){
-      if(ledVetor[i] == LOW){
-      ptr +=  String(ledVetor[i])+": LOW,\n";
+      ptr +=  String(doors[i])+": "+ String(doors_state[i]) +",\n";
     }else{
-      ptr += String(ledVetor[i])+": High,\n";
-      }
-    }else{
-      if(ledVetor[i] == LOW){
-      ptr +=  String(ledVetor[i])+": LOW\n";
-    }else{
-      ptr += String(ledVetor[i])+": High\n";
-      }
+      ptr +=  String(doors[i])+": "+ String(doors_state[i]) +"\n";
     }
   }
   ptr +="}";
