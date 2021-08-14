@@ -45,14 +45,15 @@ void setup() {
   delay(100);
   
   server.on("/", handle_OnConnect);
-  server.on("/ledon0", handle_ledOn0);
-  server.on("/ledoff0", handle_ledOff0);
-  server.on("/ledon2", handle_ledOn2);
-  server.on("/ledoff2", handle_ledOff2);
-  server.on("/ledon4", handle_ledOn4);
-  server.on("/ledoff4", handle_ledOff4);
-  server.on("/ledon5", handle_ledOn5);
-  server.on("/ledoff5", handle_ledOff5);
+  server.on("/led_on0", handle_ledOn0);
+  server.on("/led_off0", handle_ledOff0);
+  server.on("/led_on2", handle_ledOn2);
+  server.on("/led_off2", handle_ledOff2);
+  server.on("/led_on4", handle_ledOn4);
+  server.on("/led_off4", handle_ledOff4);
+  server.on("/led_on5", handle_ledOn5);
+  server.on("/ledo_ff5", handle_ledOff5);
+  server.on("/all_off", turn_off_all);
   server.onNotFound(handle_NotFound);
   server.begin();
   Serial.println("HTTP server started");
@@ -61,14 +62,16 @@ void setup() {
 void loop() {
   server.handleClient();
   for(int i =0; i< sizeof(doors)/sizeof(int); i++){
-    digitalWrite(i, doors_state[i]);
+    digitalWrite(doors[i], doors_state[i]);
   }
 }
 
 void turn_off_all(){
-  for(int i =0; i < sizeof(doors)/sizeof(int); i++){
+  for(int i =0; i< sizeof(doors)/sizeof(int); i++){
     doors_state[i] = LOW;
+    digitalWrite(doors[i], LOW);
   }
+  server.send(200, "text/html", SendHTML()); 
 }
 
 void handle_OnConnect() {
