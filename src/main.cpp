@@ -52,7 +52,7 @@ void setup() {
   server.on("/led_on4", handle_ledOn4);
   server.on("/led_off4", handle_ledOff4);
   server.on("/led_on5", handle_ledOn5);
-  server.on("/ledo_ff5", handle_ledOff5);
+  server.on("/led_off5", handle_ledOff5);
   server.on("/all_off", turn_off_all);
   server.onNotFound(handle_NotFound);
   server.begin();
@@ -125,15 +125,17 @@ void handle_ledOff5() {
 
 String SendHTML(){
   String ptr = "";
-  ptr +="{\n";
+  ptr +="[\n";
 
   for(int i =0; i < sizeof(doors)/sizeof(int); i++){
     if(i != (sizeof(doors)/sizeof(int) - 1)){
-      ptr +=  String(doors[i])+": "+ String(doors_state[i]) +",\n";
+      ptr +=  "{\ndoor :" + String(doors[i]) +" ,";
+      ptr += "state : " + String(doors_state[i]) + "\n},\n";
     }else{
-      ptr +=  String(doors[i])+": "+ String(doors_state[i]) +"\n";
+      ptr +=  "{\ndoor :" + String(doors[i]) +" ,";
+      ptr += "state : " + String(doors_state[i]) + "\n}";
     }
   }
-  ptr +="}";
+  ptr +="]";
   return ptr;
 }
