@@ -31,8 +31,6 @@ IPAddress subnet(255,255,255,0);
 
 WebServer server(80);
 
-
-
 void setup() {
   Serial.begin(115200);
   pinMode(0, OUTPUT);
@@ -71,69 +69,72 @@ void turn_off_all(){
     doors_state[i] = LOW;
     digitalWrite(doors[i], LOW);
   }
-  server.send(200, "text/html", SendHTML()); 
+  server.send(200, "application/json", SendHTML()); 
 }
 
 void handle_OnConnect() {
   //turn_off_all();
-  server.send(200, "text/html", SendHTML()); 
+  server.send(200, "application/json", SendHTML()); 
 }
 
 void handle_NotFound(){
-  server.send(404, "text/plain", "Not found");
+  server.send(404, "application/json", "Not found");
 }
 
 void handle_ledOn0() {
   doors_state[0] = HIGH;
-  server.send(200, "text/html", SendHTML()); 
+  server.send(200, "application/json", SendHTML()); 
 }
 
 void handle_ledOff0() {
   doors_state[0] = LOW;
-  server.send(200, "text/html", SendHTML());  
+  server.send(200, "application/json", SendHTML());  
 }
 
 void handle_ledOn2() {
   doors_state[1] = HIGH;
-  server.send(200, "text/html", SendHTML()); 
+  server.send(200, "application/json", SendHTML()); 
 }
 
 void handle_ledOff2() {
   doors_state[1] = LOW;
-  server.send(200, "text/html", SendHTML()); 
+  server.send(200, "application/json", SendHTML()); 
 }
 
 void handle_ledOn4() {
   doors_state[2] = HIGH;
-  server.send(200, "text/html", SendHTML()); 
+  server.send(200, "application/json", SendHTML()); 
 }
 
 void handle_ledOff4() {
   doors_state[2] = LOW;
-  server.send(200, "text/html", SendHTML()); 
+  server.send(200, "application/json", SendHTML()); 
 }
 
 void handle_ledOn5() {
   doors_state[3] = HIGH;
-  server.send(200, "text/html", SendHTML()); 
+  server.send(200, "application/json", SendHTML()); 
 }
 
 void handle_ledOff5() {
   doors_state[3] = LOW;
-  server.send(200, "text/html", SendHTML()); 
+  server.send(200, "application/json", SendHTML()); 
 }
 
 String SendHTML(){
+  //HTTP/1.1 200 OK\nContent-Type: application/json\nConnection: close
   String ptr = "";
   ptr +="[\n";
 
   for(int i =0; i < sizeof(doors)/sizeof(int); i++){
     if(i != (sizeof(doors)/sizeof(int) - 1)){
-      ptr +=  "{\ndoor :" + String(doors[i]) +" ,";
+      //ptr +=  String(doors[i]) +":"+ String(doors_state[i])+",\n";
+      ptr +=  "{\ndoor :" + String(doors[i]) +" ,\n";
       ptr += "state : " + String(doors_state[i]) + "\n},\n";
     }else{
+      //ptr +=  String(doors[i]) +":"+ String(doors_state[i])+"\n";
       ptr +=  "{\ndoor :" + String(doors[i]) +" ,";
-      ptr += "state : " + String(doors_state[i]) + "\n}";
+      ptr += "state : " + String(doors_state[i]) + "\n}\n";
     }
   }
   ptr +="]";
