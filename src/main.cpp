@@ -123,19 +123,21 @@ void handle_ledOff5() {
 
 String SendHTML(){
   String ptr = "";
-  ptr +="[\n";
+  //ptr +="[\n";
 
   for(int i =0; i < sizeof(doors)/sizeof(int); i++){
     if(i != (sizeof(doors)/sizeof(int) - 1)){
       //ptr +=  String(doors[i])+": "+ String(doors_state[i]) +",\n";
-      ptr +=  "{\ndoor : " + String(doors[i]) +" ,\n";
-      ptr += "state : " + String(doors_state[i]) + "\n},\n";
+      // ptr +=  "{\ndoor : " + String(doors[i]) +" ,\n";
+      // ptr += "state : " + String(doors_state[i]) + "\n},\n";
+      ptr +=  String(doors[i]) + ":" + String(doors_state[i]) + ",";
     }else{
-      ptr +=  "{\ndoor :" + String(doors[i]) +" ,\n";
-      ptr += "state : " + String(doors_state[i]) + "\n}\n";
+      // ptr +=  "{\ndoor :" + String(doors[i]) +" ,\n";
+      // ptr += "state : " + String(doors_state[i]) + "\n}\n";
       //ptr +=  String(doors[i])+": "+ String(doors_state[i]) +"\n";
+      ptr +=  String(doors[i]) + ":" + String(doors_state[i]);
     }
   }
-  ptr +="]";
+  //ptr +="]";
   return ptr;
 }
